@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+ 
+<html>
+ <head>
+ <title> IES </title>
+ <meta name="description" content="Aprenda a criar um site completo que usa formulários em HTML">
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+
+<link rel="stylesheet" href="util/estilo.css">
+
+ </head>
+
+ <body>
+
+ <div class="barra" align="center">
+ 	<br/>
+ 	 <!--<img src="util/logo.png"  width=50 height=50>-->
+ 	<label class="whiteText">Rede do Conselho de Medicina </label>
+ </div>
+
+ <br /><br /><br /><br />
+
+<fieldset>
+        <legend>Dados do Aluno</legend>
+
+        <table cellspacing="10">
+         <tr>
+          <td>
+           <label for="campo1">CPF: </label>
+          </td>
+          <td align="left">
+           <input id="cpf" type="text" name="campo1">
+          </td>
+         </tr>
+         <tr>
+         <td>
+           <label for="campo2">Nome do Curso: </label>
+          </td>
+          <td align="left">
+           <input id="nome" type="text" name="campo2">
+          </td>
+         </tr>
+         </tr>
+         <tr>
+         <td>
+           <label for="campo3">Data: </label>
+          </td>
+          <td align="left">
+           <input id="data" type="text" name="campo3">
+          </td>
+         </tr>
+         </tr>
+        </table>    
+		<input id="btnSubmit" type="submit" value="adicionar">
+</fieldset>
+
+<br />
+<br />
+<br />
+
+<fieldset>
+        <legend>Busca por Aluno</legend>
+        <table cellspacing="10">
+         <tr>
+          <td>
+           <label for="campo12">CPF: </label>
+          </td>
+          <td align="left">
+           <input id="cpfSearch" type="text" name="campo12">
+           <input id="btnSearch" type="submit" value="buscar">
+           <input id="btnSearchAll" type="submit" value="todos">
+          </td>
+         </tr>
+        </table> 
+</fieldset>
+<br />
+
+<p id="showData" align="center"></p>
+
+</form>
+
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous">
+</script>
+
+<script defer type="text/javascript" async>
+
+    var btnSubmit = document.getElementById("btnSubmit");
+    btnSubmit.addEventListener('click', async function (){
+
+        var cpf = document.getElementById('cpf').value
+        var nome = document.getElementById('nome').value
+        var data = document.getElementById('data').value
+
+	if(cpf !='' && nome !='' && data!=''){
+
+		var subJson = {
+		  "$class": "org.example.crm.RegistrarDiploma",
+		  "Id": cpf,
+		  "NomeDoCurso": nome,
+		  "Data": data
+		}
+
+		$.ajax({
+            url: "http://18.222.248.45:3000/api/org.example.crm.RegistrarDiploma",
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'contentType': 'application/json',
+                'Accept': 'application/json',
+            },
+            data:subJson,
+            success: function (result) {
+              alert('Dados adicionados com sucesso');
+            },
+            error: function (error) {
+               alert("Erro ao adicionar os dados");
+            }	
+        });
+
+        document.getElementById('cpf').value = '';
+        document.getElementById('nome').value = '';
+        document.getElementById('data').value = '';
+	    
+	}else{
+			alert('Preencha todos os campos');
+		}
+
+    });
+
+    var btnSearch = document.getElementById("btnSearch");
+    btnSearch.addEventListener('click', async function (){
+
+    	var cpf = document.getElementById('cpfSearch').value
+
+  if(cpf !=''){
+
+		$.ajax({
+            url: "http://18.222.248.45:3000/api/org.example.crm.Diploma/"+cpf,
+            type: 'GET',
+            dataType: 'json',
+            headers: {
+                'contentType': 'application/json',
+                'Accept': 'application/json',
+            },
+        }).then(function(result) {
+    		        createTable([result]);
+ 		 });
+
+    }else{
+      alert('Preencha o campo CPF');
+    }
+
+    });
+
+    var btnSearchAll = document.getElementById("btnSearchAll");
+    btnSearchAll.addEventListener('click', async function (){
+
+		var dados = $.ajax({
+            url: "http://18.222.248.45:3000/api/org.example.crm.Diploma",
+            type: 'GET',
+            dataType: 'json',
+            headers: {
+                'contentType': 'application/json',
+                'Accept': 'application/json',
+            },
+        }).then(function(result) {
+    		        createTable(result);
+
+ 		 });
+ 
+    });
+
+
+
+    var  createTable = function CreateTableFromJSON(result) {
+
+
+        // EXTRACT VALUE FOR HTML HEADER. 
+        // ('Book ID', 'Book Name', 'Category' and 'Price')
+        var col = [];
+        for (var i = 0; i < result.length; i++) {
+            for (var key in result[i]) {
+                if (col.indexOf(key) === -1) {
+                    col.push(key);
+                }
+            }
+        }
+
+        // CREATE DYNAMIC TABLE.
+        var table = document.createElement("table");
+        table.className = "tg";
+
+        // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+        var tr = table.insertRow(-1);                   // TABLE ROW.
+
+        for (var i = 1; i < col.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+            th.className = "tg-p7ly";
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < result.length; i++) {
+
+            tr = table.insertRow(-1);
+
+            for (var j = 1; j < col.length; j++) {
+           		var tabCell = tr.insertCell(-1);
+              tabCell.innerHTML = result[i][col[j]];
+            }
+        }
+
+        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+        var divContainer = document.getElementById("showData");
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+    }
+    
+</script>
+
+ </body>
+</html>

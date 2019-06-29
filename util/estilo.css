@@ -1,0 +1,29 @@
+.barra {
+  background-color: green;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+}
+
+.field {
+  background-color: #ffb3d1;
+}
+
+.whiteText {
+	color: #ffffff;
+	font-size: 20px;
+}
+
+.h1 {
+	color: #ff3333;
+}
+
+.tg  {border-collapse:collapse;border-spacing:0;border-color:#bbb;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#bbb;color:#594F4F;background-color:#E0FFEB;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#bbb;color:#493F3F;background-color:#9DE0AD;}
+.tg .tg-s6z2{text-align:center}
+.tg .tg-baqh{text-align:center;vertical-align:top}
+.tg .tg-p7ly{font-weight:bold;font-size:20px;text-align:center}
+.tg .tg-fbrz{font-weight:bold;font-size:20px;text-align:center;vertical-align:top}
