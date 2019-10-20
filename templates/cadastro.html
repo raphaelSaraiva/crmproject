@@ -1,0 +1,106 @@
+{% include "includes/head.html" %}
+    <title>Cadastrar Campanha</title>
+</head>
+
+ <body>
+
+ <div class="barra" align="center">
+ 	<br/>
+ 	 <!--<img src="util/logo.png"  width=50 height=50>-->
+ 	<label class="whiteText">Rede do Conselho de Medicina - IES</label>
+ </div>
+
+ <br /><br /><br /><br />
+
+<fieldset>
+        <legend>Dados do Aluno</legend>
+
+        <table cellspacing="10">
+         <tr>
+          <td>
+           <label for="campo1">CPF: </label>
+          </td>
+          <td align="left">
+           <input id="cpf" type="text" name="campo1">
+          </td>
+         </tr>
+         <tr>
+         <td>
+           <label for="campo2">Nome do Curso: </label>
+          </td>
+          <td align="left">
+           <input id="nome" type="text" name="campo2">
+          </td>
+         </tr>
+         </tr>
+         <tr>
+         <td>
+           <label for="campo3">Data: </label>
+          </td>
+          <td align="left">
+           <input id="data" type="text" name="campo3">
+          </td>
+         </tr>
+         </tr>
+        </table>    
+		<input id="btnSubmit" type="submit" value="adicionar">
+</fieldset>
+
+</form>
+
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous">
+</script>
+
+<script defer type="text/javascript" async>
+
+    var btnSubmit = document.getElementById("btnSubmit");
+    btnSubmit.addEventListener('click', async function (){
+
+        var cpf = document.getElementById('cpf').value
+        var nome = document.getElementById('nome').value
+        var data = document.getElementById('data').value
+
+	if(cpf !='' && nome !='' && data!=''){
+
+		var subJson = {
+		  "$class": "org.example.crm.RegistrarDiploma",
+		  "Id": cpf,
+		  "NomeDoCurso": nome,
+		  "Data": data
+		}
+
+		$.ajax({
+            url: "http://18.217.199.133:3000/api/org.example.crm.RegistrarDiploma",
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'contentType': 'application/json',
+                'Accept': 'application/json',
+            },
+            data:subJson,
+            success: function (result) {
+              alert('Dados adicionados com sucesso');
+            },
+            error: function (error) {
+               alert("Erro ao adicionar os dados");
+            }	
+        });
+
+        document.getElementById('cpf').value = '';
+        document.getElementById('nome').value = '';
+        document.getElementById('data').value = '';
+	    
+	}else{
+			alert('Preencha todos os campos');
+		}
+
+    });
+    
+</script>
+
+ </body>
+</html>
