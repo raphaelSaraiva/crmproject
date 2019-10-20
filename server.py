@@ -15,8 +15,6 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 @app.route('/')
 def index():
-    if(not g.user):
-        return redirect(url_for('login'))
 
     return render_template('busca.html')
 
