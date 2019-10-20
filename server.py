@@ -12,11 +12,18 @@ app.session_interface = RedisSessionInterface()
 app.secret_key = os.urandom(24)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
+@app.before_request
+def b4req():
+    g.user = None
+    if('user' in session):
+        g.user = session['user']
 
 @app.route('/')
 def index():
+    if(not g.user):
+        return redirect(url_for('login'))
 
-    return render_template('busca.html')
+    return render_template('index.html')
 
 
 
@@ -31,7 +38,7 @@ def login():
         if(True):
             session.permanent = True
             session['user'] = req['username']
-            return redirect(url_for('cadastro'))
+            return redirect(url_for('index'))
         else:
             return render_template('login.html')
     else:
@@ -39,7 +46,7 @@ def login():
 
 
 @app.route('/cadastro')
-def pontos_cadastro():
+def cadastro():
     if(not g.user):
         return redirect(url_for('login'))
 
@@ -47,8 +54,14 @@ def pontos_cadastro():
 
 
 @app.route('/busca')
-def pontos_cadastro():
+def busca():
     if(not g.user):
         return redirect(url_for('login'))
 
-    return render_template('cadastro.html')
+    return render_template('busca.html')
+
+
+@app.route('/sair')
+def sair():
+    session.pop('user', None)
+    return redirect(url_for('index'))
