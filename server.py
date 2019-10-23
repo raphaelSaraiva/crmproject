@@ -61,6 +61,22 @@ def busca():
     return render_template('busca.html')
 
 
+@app.route('/feedback')
+def feedback():
+    if(not g.user):
+        return redirect(url_for('login'))
+
+    return render_template('feedback.html')
+
+
+@app.route('/cadastroAdmin')
+def cadastroAdmin():
+    if(not g.user):
+        return redirect(url_for('login'))
+
+    return render_template('cadastroAdmin.html')
+
+
 @app.route('/sair')
 def sair():
     session.pop('user', None)
